@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="" class="theme-light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/assets/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/fontawsome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/meanmenu.min.css">
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/assets/css/nice-select.min.css">
+    <link rel="stylesheet" href="/assets/css/barfiller.min.css">
+    <link rel="stylesheet" href="/assets/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="/assets/css/odometer.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dark-mode.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+
+    <title>Docker Best Practices: Multi-stage Docker build</title>
+    <link rel="icon" type="image/png" href="/assets/images/fav-icon.png">
+</head>
+
+<body>
+    <div class="theme-switcher">
+    <label id="switch" class="switch">
+        <input type="checkbox" onchange="toggleTheme()" id="slider">
+        <span class="slider round"></span>
+    </label>
+</div>
+
+
+<div class="header-area header-area-2">
+    <div class="navbar-area">
+        <div class="main-responsive-nav">
+            <div class="container">
+                <div class="mobile-nav">
+                    <a href="/" class="logo">
+                        <img class="main-logo" src="/assets/images/NarrowWare-logo.png" alt="logo" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-nav">
+            <div class="container">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a class="navbar-brand" href="/">
+                        <img style="max-height: 2rem; max-width: 2rem" class="black-logo" src="/assets/images/logo.ico" alt="NarrowWare logo" />
+                        <img style="max-height: 2rem; max-width: 2rem" class="white-logo" src="/assets/images/logo.ico" alt="NarrowWare logo" />
+                    </a>
+                    <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            <li class="nav-item plus-icon">
+                                <a href="/" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/courses" class="nav-link">Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/services" class="nav-link">Services</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/solutions" class="nav-link">Solutions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/articles" class="nav-link">Articles</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="blog-details ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                <div class="blog-details-text-area details-text-area pr-20">
+                   
+                   <h1>Docker Best Practices: Multi-stage Docker build</h1>
+
+<p><img src="/assets/images/docker-tuesday/Docker-tuesday.png" alt="Docker Tuesday by Narrowware" /></p>
+
+<p>
+Utilizing multi-stage Docker builds represents a pinnacle best practice in the domain of containerization, revolutionizing the way developers craft and optimize Docker images. This innovative approach to building container images offers an array of benefits, ranging from enhancing image efficiency and reducing overhead to streamlining development workflows and minimizing security risks.
+</p>
+
+<h2> What is a multi-stage build? </h2>
+<p> At its essence, the multi-stage build process enables developers to create optimized Docker images by segregating the build into multiple stages, each serving a specific purpose. This approach allows for the creation of intermediate images, where each stage focuses on specific tasks, such as compiling code, installing dependencies, and building the application. Consequently, the final image produced contains only the essential artifacts, excluding unnecessary build dependencies and intermediate files. </p>
+
+<h2>Why should we use a multi-stage Docker build </h2>
+<p>One of the key advantages of multi-stage builds lies in optimizing image size and reducing bloat. By discarding unnecessary build artifacts and dependencies in the final stage, developers create leaner, smaller Docker images. This reduction in image size not only accelerates image pull and deployment times but also minimizes the attack surface, bolstering the image's security posture.
+Moreover, the multi-stage build process significantly streamlines the development workflow. It facilitates a more organized and efficient development pipeline by separating the build stages, making the process more modular and maintainable. This modularity simplifies debugging, testing, and iterative development, enabling developers to iterate and refine code more rapidly.
+Furthermore, multi-stage builds promote better resource utilization. The elimination of redundant dependencies and intermediate artifacts optimizes resource allocation during the build process, reducing the overall resource overhead required for image creation. This efficiency in resource utilization not only speeds up the build process but also contributes to a more sustainable and scalable development environment. </p>
+
+<h2>Example</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM node:18.13.0 AS angular-build
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm i
+COPY . .
+RUN npm run build -- --configuration production
+FROM nginx:alpine
+COPY --from=angular-build /usr/src/app/dist angular-client/* /usr/share/nginx/html/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]&lt;/p&gt;
+</code></pre></div></div>
+
+<p>I’ve chosen to dockerize a simple Angular application.
+A very important part of the Dockerfile is the angular-build segment we see on the first line.
+The first part (line 1-6) handles the way we build our Angular app - provided we have installed all required dependencies, we run a production build of the product.
+Now the first part is complete, we don’t really need to use the bloated node image, we could copy the artifacts produced by the build and place them in a more optimized “environment” - a container that’s spun off from the nginx:alpine image. Why do we need more optimized images, you will ask? Well check out my other article and find out!
+The COPY instruction takes the artifacts from the angular-build and places them in a folder that could be utilized by Nginx.
+The EXPOSE 80 instruction lets the Docker engine know that the corresponding port will be utilized for the internal communication.
+&lt;/p&gt;</p>
+
+<h2>To sum up</h2>
+<p>In conclusion, the adoption of multi-stage Docker builds is a cornerstone in modern containerization practices. Its ability to streamline the build process, reduce image size, enhance security, and improve resource utilization makes it an indispensable best practice for developers aiming to optimize their Docker workflows and create efficient, agile, and secure containerized applications.</p>
+
+                </div>
+                <div class="blog-text-footer pr-20">
+                   
+                    <div class="social-icons">
+                        <ul>
+                            
+                            <li><span>Share:</span></li>
+                            <li><a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4124/articles/docker-best-practices-multi-stage-docker-build" target="_blank"><i
+                                        class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.linkedin.com/shareArticle?url=http://localhost:4124/articles/docker-best-practices-multi-stage-docker-build&title=Docker Best Practices: Multi-stage Docker build" target="_blank"><i
+                                        class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://twitter.com/share?url=http://localhost:4124/articles/docker-best-practices-multi-stage-docker-build&text=Docker Best Practices: Multi-stage Docker build" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                <div class="sidebar-area pt-30">
+               
+                  
+                    <div class="sidebar-card recent-news">
+    <h3>Recent Articles</h3>
+    
+    
+    <div class="recent-news-card">
+        <img src="/assets/images/technology-solution.jpg" alt="Article image">
+        <h5><a href="/solutions">NarrowWare Custom solutions</a></h5>
+        <p>July 14, 2024</p>
+    </div>
+    
+    <div class="recent-news-card">
+        <img src="/assets/images/personalized-trainings.jpg" alt="Article image">
+        <h5><a href="/narrowware-personalized-trainings">NarrowWare Personalized trainings</a></h5>
+        <p>July 13, 2024</p>
+    </div>
+    
+    <div class="recent-news-card">
+        <img src="/assets/images/technical-education.png" alt="Article image">
+        <h5><a href="/narrowware-technical-courses">NarrowWare Technical courses</a></h5>
+        <p>July 13, 2024</p>
+    </div>
+    
+</div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer ptb-100 bg-f9faff">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="footer-logo-area">
+                    <img class="black-logo" src="/assets/images/NarrowWare-logo.png" alt="NarrowWare logo" />
+                    <img class="white-logo" src="/assets/images/NarrowWare-logo.png" alt="NarrowWare logo" />
+                    <p>NarrowWare - your trusted partner in learning and digital transformation</p>
+                    <div class="footer-social-icons">
+                        <span>NarrowWare online:</span>
+                        <ul>
+                            <li><a href="https://www.facebook.com/" target="_blank"><i
+                                        class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.linkedin.com/" target="_blank"><i
+                                        class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="https://www.instagram.com/" target="_blank"><i
+                                        class="fab fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="footer-links footer-quick-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/" target="_blank"><i class="fas fa-angle-right"></i>
+                                <span>Home</span></a></li>
+                        <li><a href="/courses" target="_blank"><i
+                                    class="fas fa-angle-right"></i> <span>
+                                    Courses</span></a></li>
+                        <li><a href="/services" target="_blank"><i class="fas fa-angle-right"></i>
+                                <span>Services</span></a></li>
+                        <li><a href="/solutions" target="_blank"><i class="fas fa-angle-right"></i> <span>
+                                    Solutions</span></a></li>
+                        <li><a href="/articles" target="_blank"><i class="fas fa-angle-right"></i> <span>
+                                    Articles</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="footer-links footer-newsletter">
+                    <h3>Subscribe</h3>
+                    <p>Subscribe To Our Newsletter To Get Our Update News!</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Your Email">
+                        <button class="btn" type="button"><i class="far fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="go-top">
+    <i class="fab fa-airbnb"></i>
+</div>
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/meanmenu.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/magnific-popup.min.js"></script>
+    <script src="/assets/js/nice-select.min.js"></script>
+    <script src="/assets/js/form-validator.min.js"></script>
+    <script src="/assets/js/contact-form-script.js"></script>
+    <script src="/assets/js/appear.min.js"></script>
+    <script src="/assets/js/TweenMax.js"></script>
+    <script src="/assets/js/odometer.min.js"></script>
+    <script src="/assets/js/barfiller.min.js"></script>
+    <script src="/assets/js/custom.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="" class="theme-light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/assets/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/fontawsome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/meanmenu.min.css">
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/assets/css/nice-select.min.css">
+    <link rel="stylesheet" href="/assets/css/barfiller.min.css">
+    <link rel="stylesheet" href="/assets/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="/assets/css/odometer.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dark-mode.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+
+    <title>Docker Best Practices: The power of .dockerignore</title>
+    <link rel="icon" type="image/png" href="/assets/images/fav-icon.png">
+</head>
+
+<body>
+    <div class="theme-switcher">
+    <label id="switch" class="switch">
+        <input type="checkbox" onchange="toggleTheme()" id="slider">
+        <span class="slider round"></span>
+    </label>
+</div>
+
+
+<div class="header-area header-area-2">
+    <div class="navbar-area">
+        <div class="main-responsive-nav">
+            <div class="container">
+                <div class="mobile-nav">
+                    <a href="/" class="logo">
+                        <img class="main-logo" src="/assets/images/NarrowWare-logo.png" alt="logo" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-nav">
+            <div class="container">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a class="navbar-brand" href="/">
+                        <img style="max-height: 2rem; max-width: 2rem" class="black-logo" src="/assets/images/logo.ico" alt="NarrowWare logo" />
+                        <img style="max-height: 2rem; max-width: 2rem" class="white-logo" src="/assets/images/logo.ico" alt="NarrowWare logo" />
+                    </a>
+                    <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            <li class="nav-item plus-icon">
+                                <a href="/" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/courses" class="nav-link">Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/services" class="nav-link">Services</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/solutions" class="nav-link">Solutions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/articles" class="nav-link">Articles</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="blog-details ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                <div class="blog-details-text-area details-text-area pr-20">
+                   
+                   <h1>Docker Best Practices: The power of .dockerignore</h1>
+
+<p><img src="/assets/images/docker-tuesday/Docker-tuesday.png" alt="Docker Tuesday by Narrowware" /></p>
+
+<p>
+In our quest for Docker mastery, every Tuesday becomes an exploration into the world of containers, as we uncover the tips, tricks, and best practices that elevate your Docker expertise. Today, we embark on a journey into the heart of efficient containerization with a focus on one key aspect: how to we use .dockerignore in a more efficient way?
+</p>
+
+<h2> Trimming the fat
+</h2>
+<p>Remember how you decided to wear that favorite sweater of yours last Christmas and found out it did not fit?
+Well, the same goes for docker images.
+.dockerignore is your tidy-up tool in Docker world. It's the gatekeeper that ensures only the essentials make it into your Docker images, saving space and keeping things clean. By specifying patterns and paths to be excluded, it prevents the Docker build process from incorporating superfluous files such as development artifacts, temporary files, logs, binaries, and other non-essential resources. This curation minimizes the size of the build context, leading to smaller, more efficient Docker images.</p>
+
+<h2 id="example-dockerignore-of-a-nodejs-app">Example .dockerignore of a NodeJS app</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    **/node_modules/
+    **/dist
+    .git
+    npm-debug.log
+    .coverage
+    .coverage.*
+    .env
+    .aws
+</code></pre></div></div>
+
+<h2>Swift and Efficient</h2>
+<p>Reducing image size through effective use of .dockerignore brings about several advantageous outcomes. Primarily, smaller images translate to faster build times and reduced network overhead during image transfers. This optimization of resources not only expedites the Docker build process but also facilitates quicker deployments, enhancing development agility and enabling faster iterations in continuous integration and continuous deployment (CI/CD) pipelines.
+
+
+<h2>Locking the Vault
+</h2>
+
+<p> Security is a top concern. .dockerignore acts like a gate, only allowing non-sensitive, necessary files into your Docker images. Limiting the exposure of unnecessary files diminishes potential vulnerabilities, safeguarding the Docker images against potential security threats.
+
+<h2> Order from Chaos </h2>
+
+<p>The efficiency gained through .dockerignore contributes to the overall cleanliness and maintainability of Docker projects. By decluttering the build context and ensuring that only essential files are included, developers create more organized, coherent Docker environments. This organization not only streamlines the development process but also simplifies collaboration among team members by providing a clearer and more manageable project structure.
+
+
+<h2>Precision Engineering </h2>
+
+
+<p>.dockerignore crafts sleek, purpose-built images. It's the key to images that travel light, adapting effortlessly to various environments. Precision in, efficiency out.
+
+<h2>Developer's Secret Sauce</h2>
+
+
+<p>The utilization of .dockerignore also aligns with Docker's philosophy of modularity, encouraging the creation of lean, purpose-built images. This practice promotes reusability across projects and environments, as images are tailored to include only necessary components, enhancing portability and scalability across diverse deployment scenarios.
+
+
+
+## To sum up
+
+In essence, the integration of .dockerignore into Docker workflows is more than just a best practice; it's a cornerstone of efficient containerization. By embracing selective exclusion, developers empower themselves to create smaller, more secure, and maintainable Docker images, streamlining development processes, fortifying security, and enhancing the overall agility and efficiency of container-based deployments.
+</p></p></p></p></p>
+
+                </div>
+                <div class="blog-text-footer pr-20">
+                   
+                    <div class="social-icons">
+                        <ul>
+                            
+                            <li><span>Share:</span></li>
+                            <li><a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4124/articles/docker-best-practices-the-power-of-dockerignore" target="_blank"><i
+                                        class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.linkedin.com/shareArticle?url=http://localhost:4124/articles/docker-best-practices-the-power-of-dockerignore&title=Docker Best Practices: The power of .dockerignore" target="_blank"><i
+                                        class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://twitter.com/share?url=http://localhost:4124/articles/docker-best-practices-the-power-of-dockerignore&text=Docker Best Practices: The power of .dockerignore" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                <div class="sidebar-area pt-30">
+               
+                  
+                    <div class="sidebar-card recent-news">
+    <h3>Recent Articles</h3>
+    
+    
+    <div class="recent-news-card">
+        <img src="/assets/images/technology-solution.jpg" alt="Article image">
+        <h5><a href="/solutions">NarrowWare Custom solutions</a></h5>
+        <p>July 14, 2024</p>
+    </div>
+    
+    <div class="recent-news-card">
+        <img src="/assets/images/personalized-trainings.jpg" alt="Article image">
+        <h5><a href="/narrowware-personalized-trainings">NarrowWare Personalized trainings</a></h5>
+        <p>July 13, 2024</p>
+    </div>
+    
+    <div class="recent-news-card">
+        <img src="/assets/images/technical-education.png" alt="Article image">
+        <h5><a href="/narrowware-technical-courses">NarrowWare Technical courses</a></h5>
+        <p>July 13, 2024</p>
+    </div>
+    
+</div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer ptb-100 bg-f9faff">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="footer-logo-area">
+                    <img class="black-logo" src="/assets/images/NarrowWare-logo.png" alt="NarrowWare logo" />
+                    <img class="white-logo" src="/assets/images/NarrowWare-logo.png" alt="NarrowWare logo" />
+                    <p>NarrowWare - your trusted partner in learning and digital transformation</p>
+                    <div class="footer-social-icons">
+                        <span>NarrowWare online:</span>
+                        <ul>
+                            <li><a href="https://www.facebook.com/" target="_blank"><i
+                                        class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.linkedin.com/" target="_blank"><i
+                                        class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="https://www.instagram.com/" target="_blank"><i
+                                        class="fab fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="footer-links footer-quick-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/" target="_blank"><i class="fas fa-angle-right"></i>
+                                <span>Home</span></a></li>
+                        <li><a href="/courses" target="_blank"><i
+                                    class="fas fa-angle-right"></i> <span>
+                                    Courses</span></a></li>
+                        <li><a href="/services" target="_blank"><i class="fas fa-angle-right"></i>
+                                <span>Services</span></a></li>
+                        <li><a href="/solutions" target="_blank"><i class="fas fa-angle-right"></i> <span>
+                                    Solutions</span></a></li>
+                        <li><a href="/articles" target="_blank"><i class="fas fa-angle-right"></i> <span>
+                                    Articles</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="footer-links footer-newsletter">
+                    <h3>Subscribe</h3>
+                    <p>Subscribe To Our Newsletter To Get Our Update News!</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Your Email">
+                        <button class="btn" type="button"><i class="far fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="go-top">
+    <i class="fab fa-airbnb"></i>
+</div>
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/meanmenu.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/magnific-popup.min.js"></script>
+    <script src="/assets/js/nice-select.min.js"></script>
+    <script src="/assets/js/form-validator.min.js"></script>
+    <script src="/assets/js/contact-form-script.js"></script>
+    <script src="/assets/js/appear.min.js"></script>
+    <script src="/assets/js/TweenMax.js"></script>
+    <script src="/assets/js/odometer.min.js"></script>
+    <script src="/assets/js/barfiller.min.js"></script>
+    <script src="/assets/js/custom.js"></script>
+</body>
+
+</html>
